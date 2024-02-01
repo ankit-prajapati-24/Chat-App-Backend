@@ -38,6 +38,12 @@ io.on('connection', (socket) => {
     });
 });
 
+app.use(
+    cors({
+      origin: "*",
+      credentials: true
+    })
+  );
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
