@@ -13,7 +13,7 @@ const io = new Server(server, {
     }
   });
 
-// app.use(express.static(path.resolve('./public')));
+app.use(express.static(path.resolve('./public')));
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
@@ -38,9 +38,9 @@ io.on('connection', (socket) => {
     });
 });
 
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public', 'index.html'));
-// });
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 const PORT = process.env.PORT || 4000;
 
