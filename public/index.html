@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chat app</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .my-message{
+          color: aqua;
+          text-align: end;
+          padding-left: 30px;
+          padding-right: 30px;
+          font-weight: bold;
+          align-self: flex-end;
+          border-radius: 10px;
+          border: 2px solid white;
+          font-size: large;
+        }
+        
+        .server-message{
+         
+            color: yellow;
+          text-align: end;
+          padding-left: 30px;
+          padding-right: 30px;
+          font-weight: bold;
+          align-self: flex-start;
+          border-radius: 10px;
+          border: 2px solid white;
+          font-size: large;
+        }
+
+    </style>
+</head>
+<body class="bg-black">
+<div class="flex items-center flex-col bg-black text-white h-screen gap-2 justify-between w-screen p-3 max-w-[600px] mx-auto">
+    <h1 class="text-2xl font-bold ">Chatting Aplication</h1>
+    <div id="Allmessages" class="text-white h-full flex border flex-col w-full p-3 rounded-md text-white">
+      <!-- <h1>Your id : </h1> -->
+    </div>
+  <div class="flex items-center justify-center w-full gap-3">
+    <input type="text" id="messageinput" placeholder="write a message" class="w-full max-w-[500px] p-2 rounded-md text-black"/>
+    <input type="text" id="room" placeholder="room id" class="w-full max-w-[500px] p-2 rounded-md text-black"/>
+    <button class="flex rounded-md px-3 py-2 border bg-blue-500" id="sendbtn">Send</button>
+</div>
+</div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        var roomid = "";
+
+        const Allmessages = document.getElementById("Allmessages");
+        const room = document.getElementById("room");
+
+        const messageinput= document.getElementById("messageinput");
+        const me= document.getElementById("me");
+        const server= document.getElementById("server");
+        
+        const sendbtn= document.getElementById("sendbtn");
+
+       room.addEventListener("change",(e)=>{
+         roomid = e.target.value;
+       })
+
+       socket.on("connect",()=>{
+        const newmessage = document.createElement("b");
+            newmessage.innerText = `Your id is : ${socket.id}`;
+            Allmessages.appendChild(newmessage);
+       })
+        socket.on("chat-message",(msg) =>{
+            console.log("servermsg",msg);
+            const newmessage = document.createElement("div");
+            newmessage.innerText = msg;
+            newmessage.className = "server-message";
+            Allmessages.appendChild(newmessage);
+        } )
+        
+        sendbtn.addEventListener("click",()=>{
+            const message = messageinput.value;
+            messageinput.value = '';
+            // console.log(message);
+            const newmessage = document.createElement("div");
+            newmessage.innerText = message;
+             
+            newmessage.className = "my-message";
+
+            Allmessages.appendChild(newmessage);
+            console.log("this is " ,roomid);
+            socket.emit('chat-message',message,roomid );
+        })
+        
+    </script>
+</body>
