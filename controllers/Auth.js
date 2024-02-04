@@ -1,18 +1,16 @@
 const User = require('../models/User');
 const OTP = require('../models/Otp');
-const accountSid = 'AC01ab14dc01c0c7ac8ebb3700b2dd0f51';
-const authToken = "a1b7ee89e8be4956afb6e66786399a19"; // Use environment variable
-const client = require('twilio')(accountSid, authToken);
-
+const twilio = require('twilio');
 require("dotenv").config();
 exports.SendOtp = async (req, res) => {
     try {
         
-        // const accountSid = TWILIO_ACCOUNT_SID; // Use environment variable
-        const twilioPhoneNumber = "+17637037393"; // Use environment variable
+        const accountSid = process.env.TWILIO_ACCOUNT_SID; // Use environment variable
+        const authToken =  process.env.TWILIO_AUTH_TOKEN; // Use environment variable
+        const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER; // Use environment variable
 
-        // const client = new twilio(TWILIO_ACCOUNT_SID, authToken);
-        // console.log(client);
+        const client = new twilio(accountSid, authToken);
+        console.log(client);
         const { to } = req.body;
 
         if (!to) {
@@ -24,28 +22,28 @@ exports.SendOtp = async (req, res) => {
 
         // Send OTP via SMS
         client.messages.create({
-            body: `Your Whatsapp OTP is: ${otp}`,
-            to: to,
-            from: "+17637037393",
+            body: `Your OTP is: ${otp}`,
+            from: twilioPhoneNumber,
+            to: to, // Remove non-digit characters from the phone number
         })
         .then(async() => {
                 res.status(200).json({ success: true, message: `OTP sent successfully to ${to}`,otp: otp  });
-            const isOtp = await OTP.findOne({Number:to});
-            console.log(isOtp);
-            if(isOtp) {
+            // const isOtp = await OTP.findOne({Number:to});
+            // console.log(isOtp);
+            // if(isOtp) {
                 
-                console.log("OTP  PRESENT UPdating...");
-                isOtp.Otp = otp;
-                await isOtp.save();
-                console.log("otp is her",otp);
-                res.status(200).json({ success: true, message: `OTP sent successfully to ${to}`,otp: otp  });
-            }
-            else{
-                console.log("OTP NOT PRESENT CREATING NEW ONE");
-                const otpDetails = await OTP.create({Number:to,Otp:otp});
-                console.log(otpDetails,"otp is her",otp);
-                res.status(200).json({ success: true, message: `OTP sent successfully to ${to}`,otp: otp  });   
-            }
+            //     console.log("OTP  PRESENT UPdating...");
+            //     isOtp.Otp = otp;
+            //     await isOtp.save();
+            //     console.log("otp is her",otp);
+            //     res.status(200).json({ success: true, message: `OTP sent successfully to ${to}`,otp: otp  });
+            // }
+            // else{
+            //     console.log("OTP NOT PRESENT CREATING NEW ONE");
+            //     const otpDetails = await OTP.create({Number:to,Otp:otp});
+            //     console.log(otpDetails,"otp is her",otp);
+            //     res.status(200).json({ success: true, message: `OTP sent successfully to ${to}`,otp: otp  });   
+            // }
         })
         .catch((error) => {
             res.status(500).json({ error: 'Failed to send OTP', details: error.message });
