@@ -20,7 +20,6 @@
         }
         
         .server-message{
-         
             color: yellow;
           text-align: end;
           padding-left: 30px;
@@ -31,7 +30,6 @@
           border: 2px solid white;
           font-size: large;
         }
-
     </style>
 </head>
 <body class="bg-black">
@@ -48,6 +46,14 @@
 </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      const sender = prompt('Sender no:');
+      const reciver = prompt('reciver no:');
+      const Name = prompt('name:');
+
+      alert(`You entered: ${sender} ${reciver} ${Name}`);
+
+      console.log(reciver,sender);
+
         const socket = io();
         var roomid = "";
 
@@ -83,12 +89,10 @@
             // console.log(message);
             const newmessage = document.createElement("div");
             newmessage.innerText = message;
-             
             newmessage.className = "my-message";
-
             Allmessages.appendChild(newmessage);
             console.log("this is " ,roomid);
-            socket.emit('chat-message',message,roomid );
+            socket.emit('chat-message',message,sender,reciver,Name);
         })
         
     </script>
