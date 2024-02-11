@@ -7,7 +7,8 @@ const RoomSchmea = mongoose.Schema({
     Messages: [
         { 
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Message"
+            ref: "Message",
+           
         }
     ]
 });

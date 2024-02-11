@@ -17,7 +17,8 @@ const UserSchema = mongoose.Schema({
     Chats:[
             { 
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Room"
+                ref: "Room",
+                unique: true
             }
     ]
 });

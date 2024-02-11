@@ -8,7 +8,29 @@ exports.getChats = async (req, res) => {
         const { Number } = req.body;
         const chats = await User.find({ Number: Number }).populate("Chats").exec();
         console.log(chats);
-        res.send.status(200).json({
+        res.status(200).json({
+            chats: chats,
+        })
+    }
+    catch (err) {
+        console.error(err);
+        res.send(err);
+    }
+}
+exports.getRoomChat = async (req, res) => {
+
+    try {
+        console.log("req. accept",req.body);
+        const { sender,receiver } = req.body;
+        const Roomid = `${sender}${receiver}`;
+        const existRoomid = `${receiver}${sender}`;
+    
+        let chats = await Room.findOne({ RoomId: Roomid }).populate("Messages").exec();
+        if(!chats) {
+            chats = chats = await Room.findOne({ RoomId: existRoomid }).populate("Messages").exec();
+        }
+        console.log(chats);
+        res.status(200).json({
             chats: chats,
         })
     }
@@ -21,12 +43,13 @@ exports.getChats = async (req, res) => {
 exports.addMessageInRoom = async (RoomId, MessageText, Name, Number) => {
     try {
         // Find the room by RoomId
+        console.log("this is room id",RoomId.toString());
         let room = await Room.findOne({ RoomId: RoomId });
-
+         
         if (!room) {
-            // If the room doesn't exist, create a new room
+            console.log(" If the room doesn't exist, create a new room");
             room = await Room.create({
-                RoomId,
+                RoomId : RoomId.toString(),
                 Messages: [],
             });
         }
@@ -49,10 +72,9 @@ exports.addMessageInRoom = async (RoomId, MessageText, Name, Number) => {
         const user = await User.findOne({ Number: Number }).populate('Chats').exec();
 
         // Log the user details for debugging purposes
-        console.log(user);
-
-        // Check if the room ID is not already in the user's chats
-        if (!user.Chats.includes(room._id)) {
+        const exists = user.Chats.some(chat => chat._id.toString() === room._id.toString());
+ 
+        if (!exists) {
             // Add the room ID to the user's chats
             user.Chats.push(room._id);
 

@@ -53,27 +53,55 @@ io.on('connection', (socket) => {
 
   socket.on('chat-message', async (msg, sender, reciever, name) => {
     // Handle chat messages
-
-    const Roomid = `${phone(sender)}${phone(reciever)}`;
-    const existRoomid = `${phone(reciever)}${phone(sender)}`;
+    const Roomid = `${sender}${reciever}`;
+    const existRoomid = `${reciever}${sender}`;
     const allRooms = io.sockets.adapter.rooms;
+
 
     if (allRooms.has(existRoomid)) {
       // If existing room, join and emit message
       socket.join(existRoomid);
       socket.to(existRoomid).emit('chat-message', msg);
       console.log('Connected to existing room', existRoomid);
-      const result = await addMessageInRoom(existRoomid, msg, name, sender);
+      const result = await addMessageInRoom(existRoomid.toString(), msg, name, sender);
       console.log('Result:', result);
     } else {
       // If new room, join and emit message
       socket.join(Roomid);
       console.log('Connected to new room', Roomid);
       socket.to(Roomid).emit('chat-message', msg);
-      const result = await addMessageInRoom(Roomid, msg, name, sender);
+      const result = await addMessageInRoom(Roomid.toString(), msg, name, sender);
       console.log('Result:', result);
     }
 
+    console.log('Received message:', msg, sender, reciever);
+  });
+
+
+  socket.on('connectRoom', async (msg, sender, reciever, name) => {
+    // Handle chat messages
+
+    const Roomid = `${sender}${reciever}`;
+    const existRoomid = `${reciever}${sender}`;
+    const allRooms = io.sockets.adapter.rooms;
+
+
+
+    if (allRooms.has(existRoomid)) {
+      // If existing room, join and emit message
+      socket.join(existRoomid);
+      // socket.to(existRoomid).emit('chat-message', msg);
+      console.log('Connected to existing room', existRoomid);
+      // const result = await addMessageInRoom(existRoomid.toString(), msg, name, sender);
+      // console.log('Result:', result);
+    } else {
+      // If new room, join and emit message
+      socket.join(Roomid);
+      console.log('Connected to new room', Roomid);
+      // socket.to(Roomid).emit('chat-message', msg);
+      // const result = await addMessageInRoom(Roomid.toString(), msg, name, sender);
+      // console.log('Result:', result);
+    }
     console.log('Received message:', msg, sender, reciever);
   });
 

@@ -3,18 +3,18 @@ const { uploadImageToCloudinary } = require('../utils/imageUploader');
 require("dotenv").config();
 exports.UpdateProfile = async (req, res) => {
     try {
-        const { Number, Name } = req.body;
-        const image = req.files.Image;
+        console.log("request accepted",req.body);
+        const { Number, Name ,Image} = req.body;
+        const image = Image;
         console.log(Number, Name, image);
 
         const user = await User.findOne({ Number: Number });
         if (!user) {
-            return res.status(404).json({ error: 'UserNotFound', message: 'User not found' });
         }
 
         // const userImage = await uploadImageToCloudinary(image, process.env.FOLDER_NAME);
         console.log("ready for upload");
-        const userImage = await uploadImageToCloudinary(req.files.Image,"MYCLOUDE");
+        const userImage = await uploadImageToCloudinary(Image,"MYCLOUDE");
         console.log("done upload");
         
         user.Image = userImage.secure_url;
