@@ -6,16 +6,16 @@ exports.UpdateProfile = async (req, res) => {
         //console.log("request accepted",req.body);
         const { Number, Name ,Image} = req.body;
         const image = Image;
-        //console.log(Number, Name, image);
+        console.log(Number, Name, image);
 
         const user = await User.findOne({ Number: Number });
         if (!user) {
         }
 
         // const userImage = await uploadImageToCloudinary(image, process.env.FOLDER_NAME);
-        //console.log("ready for upload");
-        const userImage = await uploadImageToCloudinary(Image,"MYCLOUDE");
-        //console.log("done upload");
+        console.log("ready for upload");
+        const userImage = await uploadImageToCloudinary(image,"MYCLOUDE");
+        console.log("done upload");
         
         user.Image = userImage.secure_url;
         user.Name = Name;
