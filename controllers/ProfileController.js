@@ -3,9 +3,9 @@ const { uploadImageToCloudinary } = require('../utils/imageUploader');
 require("dotenv").config();
 exports.UpdateProfile = async (req, res) => {
     try {
-        console.log("request accepted",req.body);
+        //console.log("request accepted",req.body);
         const { Number, Name ,Image} = req.body;
-    
+        const image = Image;
         //console.log(Number, Name, image);
 
         const user = await User.findOne({ Number: Number });
