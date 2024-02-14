@@ -5,7 +5,6 @@ const express = require('express');
 const cors = require('cors');
 const { Server } = require('socket.io');
 const bodyParser = require('body-parser');
-app.use(bodyParser.json({ limit: '10mb' }));
 const {phone} = require('phone');
 
 const fileUpload = require('express-fileupload');
@@ -47,6 +46,7 @@ app.use(
     tempFileDir: '/tmp',
   })
 );
+app.use(bodyParser.json({ limit: '10mb' }));
 
 // Socket.IO Setup
 io.on('connection', (socket) => {
