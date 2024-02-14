@@ -52,7 +52,7 @@
 
       alert(`You entered: ${sender} ${reciver} ${Name}`);
 
-      console.log(reciver,sender);
+      //console.log(reciver,sender);
 
         const socket = io();
         var roomid = "";
@@ -76,7 +76,7 @@
             Allmessages.appendChild(newmessage);
        })
         socket.on("chat-message",(msg) =>{
-            console.log("servermsg",msg);
+            //console.log("servermsg",msg);
             const newmessage = document.createElement("div");
             newmessage.innerText = msg;
             newmessage.className = "server-message";
@@ -86,12 +86,12 @@
         sendbtn.addEventListener("click",()=>{
             const message = messageinput.value;
             messageinput.value = '';
-            // console.log(message);
+            // //console.log(message);
             const newmessage = document.createElement("div");
             newmessage.innerText = message;
             newmessage.className = "my-message";
             Allmessages.appendChild(newmessage);
-            console.log("this is " ,roomid);
+            //console.log("this is " ,roomid);
             socket.emit('chat-message',message,sender,reciver,Name);
         })
         

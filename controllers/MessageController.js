@@ -7,20 +7,20 @@ exports.getChats = async (req, res) => {
     try {
         const { Number } = req.body;
         const chats = await User.find({ Number: Number }).populate("Chats").exec();
-        console.log(chats);
+        //console.log(chats);
         res.status(200).json({
             chats: chats,
         })
     }
     catch (err) {
-        console.error(err);
+        //console.error(err);
         res.send(err);
     }
 }
 exports.getRoomChat = async (req, res) => {
 
     try {
-        console.log("req. accept",req.body);
+        //console.log("req. accept",req.body);
         const { sender,receiver } = req.body;
         const Roomid = `${sender}${receiver}`;
         const existRoomid = `${receiver}${sender}`;
@@ -29,13 +29,13 @@ exports.getRoomChat = async (req, res) => {
         if(!chats) {
             chats = chats = await Room.findOne({ RoomId: existRoomid }).populate("Messages").exec();
         }
-        console.log(chats);
+        //console.log(chats);
         res.status(200).json({
             chats: chats,
         })
     }
     catch (err) {
-        console.error(err);
+        //console.error(err);
         res.send(err);
     }
 }
@@ -43,11 +43,11 @@ exports.getRoomChat = async (req, res) => {
 exports.addMessageInRoom = async (RoomId, MessageText, Name, Number) => {
     try {
         // Find the room by RoomId
-        console.log("this is room id",RoomId.toString());
+        //console.log("this is room id",RoomId.toString());
         let room = await Room.findOne({ RoomId: RoomId });
          
         if (!room) {
-            console.log(" If the room doesn't exist, create a new room");
+            //console.log(" If the room doesn't exist, create a new room");
             room = await Room.create({
                 RoomId : RoomId.toString(),
                 Messages: [],
@@ -81,9 +81,9 @@ exports.addMessageInRoom = async (RoomId, MessageText, Name, Number) => {
             // Save the user document with the updated chats
             await user.save();
 
-            console.log('Room added to user chats:', room._id);
+            //console.log('Room added to user chats:', room._id);
         } else {
-            console.log('Room already exists in user chats:', room._id);
+            //console.log('Room already exists in user chats:', room._id);
         }
         return { success: true, message: 'Message added successfully', user };
     } catch (error) {

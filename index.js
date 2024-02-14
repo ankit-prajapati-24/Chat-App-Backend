@@ -49,7 +49,7 @@ app.use(
 
 // Socket.IO Setup
 io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
+  //console.log('A user connected:', socket.id);
 
   socket.on('chat-message', async (msg, sender, reciever, name) => {
     // Handle chat messages
@@ -62,19 +62,19 @@ io.on('connection', (socket) => {
       // If existing room, join and emit message
       socket.join(existRoomid);
       socket.to(existRoomid).emit('chat-message', msg);
-      console.log('Connected to existing room', existRoomid);
+      //console.log('Connected to existing room', existRoomid);
       const result = await addMessageInRoom(existRoomid.toString(), msg, name, sender);
-      console.log('Result:', result);
+      //console.log('Result:', result);
     } else {
       // If new room, join and emit message
       socket.join(Roomid);
-      console.log('Connected to new room', Roomid);
+      //console.log('Connected to new room', Roomid);
       socket.to(Roomid).emit('chat-message', msg);
       const result = await addMessageInRoom(Roomid.toString(), msg, name, sender);
-      console.log('Result:', result);
+      //console.log('Result:', result);
     }
 
-    console.log('Received message:', msg, sender, reciever);
+    //console.log('Received message:', msg, sender, reciever);
   });
 
 
@@ -91,23 +91,23 @@ io.on('connection', (socket) => {
       // If existing room, join and emit message
       socket.join(existRoomid);
       // socket.to(existRoomid).emit('chat-message', msg);
-      console.log('Connected to existing room', existRoomid);
+      //console.log('Connected to existing room', existRoomid);
       // const result = await addMessageInRoom(existRoomid.toString(), msg, name, sender);
-      // console.log('Result:', result);
+      // //console.log('Result:', result);
     } else {
       // If new room, join and emit message
       socket.join(Roomid);
-      console.log('Connected to new room', Roomid);
+      //console.log('Connected to new room', Roomid);
       // socket.to(Roomid).emit('chat-message', msg);
       // const result = await addMessageInRoom(Roomid.toString(), msg, name, sender);
-      // console.log('Result:', result);
+      // //console.log('Result:', result);
     }
-    console.log('Received message:', msg, sender, reciever);
+    //console.log('Received message:', msg, sender, reciever);
   });
 
   socket.on('disconnect', () => {
     // Handle user disconnection
-    console.log('User disconnected:', socket.id);
+    //console.log('User disconnected:', socket.id);
   });
 });
 
@@ -127,5 +127,5 @@ ConnectCloadinary();
 
 // Start Server
 server.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+  //console.log(`Server is listening on port ${PORT}`);
 });

@@ -8,12 +8,12 @@ exports.SendOtp = async (req, res) => {
         const accountSid = process.env.TWILIO_ACCOUNT_SID; // Use environment variable
         const authToken =  process.env.TWILIO_AUTH_TOKEN; // Use environment variable
         const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER; // Use environment variable
-        console.log(accountSid,authToken,twilioPhoneNumber);
+        //console.log(accountSid,authToken,twilioPhoneNumber);
         const client = new twilio("AC01ab14dc01c0c7ac8ebb3700b2dd0f51", authToken);
-        console.log(client);
+        //console.log(client);
         const { Number ,ContryCode} = req.body;
         
-        console.log("req body",req.body);
+        //console.log("req body",req.body);
         if (!Number) {
             return res.status(400).json({ error: 'Missing phone number' });
         }
@@ -30,19 +30,19 @@ exports.SendOtp = async (req, res) => {
         // .then(async() => {
         //         res.status(200).json({ success: true, message: `OTP sent successfully to ${to}`,otp: otp  });
             const isOtp = await OTP.findOne({Number:Number});
-            console.log(isOtp);
+            //console.log(isOtp);
             if(isOtp) {
                 
-                console.log("OTP  PRESENT UPdating...");
+                //console.log("OTP  PRESENT UPdating...");
                 isOtp.Otp = otp;
                 await isOtp.save();
-                console.log("otp is her",otp);
+                //console.log("otp is her",otp);
                 res.status(200).json({ success: true, message: `OTP sent successfully to ${Number}`,otp: otp  });
             }
             else{
-                console.log("OTP NOT PRESENT CREATING NEW ONE");
+                //console.log("OTP NOT PRESENT CREATING NEW ONE");
                 const otpDetails = await OTP.create({Number:Number,Otp:otp});
-                console.log(otpDetails,"otp is her",otp);
+                //console.log(otpDetails,"otp is her",otp);
                 res.status(200).json({ success: true, message: `OTP sent successfully to ${Number}`,otp: otp  });   
             }
         // })
@@ -60,14 +60,14 @@ exports.SendOtp = async (req, res) => {
 
 exports.Login = async (req, res) => {
     try {
-        console.log('ready for login ',req.body);
+        //console.log('ready for login ',req.body);
         const { Number, UserOTP } = req.body;
         const user = await User.findOne({Number:Number});
         const otps = await OTP.findOne({ Number :Number});
-        console.log(otps);
+        //console.log(otps);
 
         if(user){
-            console.log('user is present ', user);
+            //console.log('user is present ', user);
             if (otps && UserOTP == otps.Otp) {
                 res.status(200).json({
                     user:user,
@@ -81,11 +81,11 @@ exports.Login = async (req, res) => {
                 });
             }
         }else{
-            console.log('user is not  present craeting new one');
+            //console.log('user is not  present craeting new one');
             if (otps && UserOTP == otps.Otp) {
-                console.log('Otp validate and now creagtin user');
+                //console.log('Otp validate and now creagtin user');
                 const user = await User.create({Number:Number});
-                console.log("user created",user);
+                //console.log("user created",user);
                 res.status(200).json({
                     success: true,
                     user: user,
