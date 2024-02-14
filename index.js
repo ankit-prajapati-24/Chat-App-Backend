@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const { Server } = require('socket.io');
 const bodyParser = require('body-parser');
+app.use(bodyParser.json({ limit: '10mb' }));
 const {phone} = require('phone');
 
 const fileUpload = require('express-fileupload');
