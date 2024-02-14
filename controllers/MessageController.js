@@ -40,7 +40,7 @@ exports.getRoomChat = async (req, res) => {
     }
 }
 
-exports.addMessageInRoom = async (RoomId, MessageText, Name, Number) => {
+exports.addMessageInRoom = async (RoomId, MessageText, Name, Number,Date) => {
     try {
         // Find the room by RoomId
         //console.log("this is room id",RoomId.toString());
@@ -59,7 +59,7 @@ exports.addMessageInRoom = async (RoomId, MessageText, Name, Number) => {
             MessageText: MessageText,
             Name,
             Number,
-            timestamp: Date.now(),
+            date:Date
         });
 
         // Add the new message to the room's Messages array
