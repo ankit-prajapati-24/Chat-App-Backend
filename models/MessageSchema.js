@@ -21,12 +21,14 @@ const MessageSchema = mongoose.Schema({
     },
     MessageText: {
         type: String,
-        required: true,
+    },
+    Image:{
+        type: String,
     },
     date: {
         type: String,
-    },
-    
+        // default:gettime()
+    }, 
 });
 
 module.exports = mongoose.model("Message", MessageSchema);

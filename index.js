@@ -12,7 +12,7 @@ require('dotenv').config();
 
 // Custom Modules
 const dbconnect = require('./config/connectToDb');
-const { addMessageInRoom } = require('./controllers/MessageController');
+const { addMessageInRoom, addImageInRoom } = require('./controllers/MessageController');
 const { ConnectCloadinary } = require('./config/Coudinary');
 
 // Routes
@@ -54,28 +54,51 @@ io.on('connection', (socket) => {
 
   socket.on('chat-message', async (msg, sender, reciever, name,Date) => {
     // Handle chat messages
+    console.log(msg, sender,reciever,name,Date);
     const Roomid = `${sender}${reciever}`;
     const existRoomid = `${reciever}${sender}`;
     const allRooms = io.sockets.adapter.rooms;
 
 
-    if (allRooms.has(existRoomid)) {
+    if (allRooms.has(existRoomid)){
       // If existing room, join and emit message
+      console.log("Room already exists");
       socket.join(existRoomid);
       socket.to(existRoomid).emit('chat-message', msg);
-      //console.log('Connected to existing room', existRoomid);
-      const result = await addMessageInRoom(existRoomid.toString(), msg, name, sender,Date);
-      //console.log('Result:', result);
+      const result = await addMessageInRoom(sender,reciever, msg, name, sender,Date);
+      
     } else {
-      // If new room, join and emit message
+      console.log("Room not already exists");
       socket.join(Roomid);
-      //console.log('Connected to new room', Roomid);
       socket.to(Roomid).emit('chat-message', msg);
-      const result = await addMessageInRoom(Roomid.toString(), msg, name, sender,Date);
-      //console.log('Result:', result);
+      const result = await addMessageInRoom(sender,reciever, msg, name, sender,Date);
     }
 
     console.log('Received message:', msg, sender, reciever,Date);
+  });
+
+  socket.on('image-message', async (image, sender, reciever, name,Date) => {
+    // Handle chat messages
+    console.log(image, sender,reciever,name,Date);
+    const Roomid = `${sender}${reciever}`;
+    const existRoomid = `${reciever}${sender}`;
+    const allRooms = io.sockets.adapter.rooms;
+
+
+    if (allRooms.has(existRoomid)){
+      // If existing room, join and emit message
+      console.log("Room already exists");
+      socket.join(existRoomid);
+      socket.to(existRoomid).emit('image-message', image);
+      const result = await addImageInRoom(sender,reciever, image, name, sender,Date);
+      
+    } else {
+      console.log("Room not already exists");
+      socket.join(Roomid);
+      socket.to(Roomid).emit('image-message', image);
+      const result = await addImageInRoom(sender,reciever,image, name, sender,Date);
+    }
+    console.log('Received message:', image, sender, reciever,Date);
   });
 
 
@@ -89,26 +112,19 @@ io.on('connection', (socket) => {
 
 
     if (allRooms.has(existRoomid)) {
-      // If existing room, join and emit message
       socket.join(existRoomid);
-      // socket.to(existRoomid).emit('chat-message', msg);
       console.log('Connected to existing room', existRoomid);
-      // const result = await addMessageInRoom(existRoomid.toString(), msg, name, sender);
-      // //console.log('Result:', result);
     } else {
       // If new room, join and emit message
       socket.join(Roomid);
       console.log('Connected to new room', Roomid);
-      // socket.to(Roomid).emit('chat-message', msg);
-      // const result = await addMessageInRoom(Roomid.toString(), msg, name, sender);
-      // //console.log('Result:', result);
     }
     console.log('Received request for connect romm:', msg, sender, reciever);
   });
 
   socket.on('disconnect', () => {
     // Handle user disconnection
-    //console.log('User disconnected:', socket.id);
+    console.log('User disconnected:', socket.id);
   });
 });
 
